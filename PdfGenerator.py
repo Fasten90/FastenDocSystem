@@ -3,7 +3,7 @@ import time
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph
 from functools import partial
@@ -26,21 +26,22 @@ def generate_pdf(filepath):
 
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
-    styleFooter = styleN
-    styleFooter.alignment = TA_CENTER
+    # TODO: self.styles.add(ParagraphStyle ...
+    styleHeaderFooter = ParagraphStyle(name='StyleHeaderFooter', alignment=TA_CENTER)
+    #styleFooter.alignment = TA_CENTER
     styleH = styles['Heading1']
 
-    def header_footer(canvas, doc, content):
-        # TODO: content could be decided here
+    def header_footer(canvas, doc):
         canvas.saveState()
 
         # Header
-        w, h = content.wrap(doc.width, doc.topMargin)
-        content.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
+        header_text = Paragraph("FastenPdf.  ", styleHeaderFooter)
+        w, h = header_text.wrap(doc.width, doc.topMargin)
+        header_text.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
         # Footer
         page_num = canvas.getPageNumber()
-        footer_text = Paragraph("%s" % page_num, styleFooter)
+        footer_text = Paragraph("%s" % page_num, styleHeaderFooter)
         w, h = footer_text.wrap(doc.width, doc.bottomMargin)
         footer_text.drawOn(canvas, doc.leftMargin, h)
 
@@ -48,9 +49,8 @@ def generate_pdf(filepath):
 
 
     doc = BaseDocTemplate(filepath, pagesize=A4)
-    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 2 * cm, id='normal')
-    header_content = Paragraph("This is a multi-line header.  It goes on every page.  " * 8, styleN)
-    template = PageTemplate(id='test', frames=frame, onPage=partial(header_footer, content=header_content))
+    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id='normal')
+    template = PageTemplate(id='test', frames=frame, onPage=partial(header_footer))
     doc.addPageTemplates([template])
 
     text = []
