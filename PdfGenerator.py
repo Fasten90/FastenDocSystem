@@ -1,5 +1,5 @@
 import os
-
+import time
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
@@ -46,6 +46,7 @@ def generate_pdf(filepath):
 
         canvas.restoreState()
 
+
     doc = BaseDocTemplate(filepath, pagesize=A4)
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 2 * cm, id='normal')
     header_content = Paragraph("This is a multi-line header.  It goes on every page.  " * 8, styleN)
@@ -57,7 +58,21 @@ def generate_pdf(filepath):
         text.append(Paragraph("This is line %d." % i, styleN))
 
     # Finish pdf
-    doc.build(text)
+    try:
+        doc.build(text)
+    except PermissionError as ex:
+        debug_log("Error: {}".format(ex))
+        debug_log("Please close the pdf document!")
+
+        # TODO: This solution is not works fine
+        time_sec = 20
+        for i in range(time_sec, 0, -1):
+            # Wait 1 sec
+            debug_log("Wait {} seconds...".format(i))
+            time.sleep(1)
+
+        # Retry generation
+        doc.build(text)
 
 
     """
