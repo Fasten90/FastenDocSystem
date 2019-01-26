@@ -27,16 +27,26 @@ def generate_pdf(filepath):
     styleN = styles['Normal']
     styleH = styles['Heading1']
 
-    def header(canvas, doc, content):
+    def header_footer(canvas, doc, content):
+        # TODO: content could be decided here
         canvas.saveState()
+
+        # Header
         w, h = content.wrap(doc.width, doc.topMargin)
         content.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
+
+        # Footer
+        page_num = canvas.getPageNumber()
+        footer_text = Paragraph("%s" % page_num, styleN)
+        w, h = footer_text.wrap(doc.width, doc.bottomMargin)
+        footer_text.drawOn(canvas, doc.leftMargin, h)
+
         canvas.restoreState()
 
     doc = BaseDocTemplate(filepath, pagesize=A4)
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 2 * cm, id='normal')
     header_content = Paragraph("This is a multi-line header.  It goes on every page.  " * 8, styleN)
-    template = PageTemplate(id='test', frames=frame, onPage=partial(header, content=header_content))
+    template = PageTemplate(id='test', frames=frame, onPage=partial(header_footer, content=header_content))
     doc.addPageTemplates([template])
 
     text = []
