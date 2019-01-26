@@ -4,6 +4,7 @@ import os
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph
 from functools import partial
 
@@ -25,6 +26,8 @@ def generate_pdf(filepath):
 
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
+    styleFooter = styleN
+    styleFooter.alignment = TA_CENTER
     styleH = styles['Heading1']
 
     def header_footer(canvas, doc, content):
@@ -37,7 +40,7 @@ def generate_pdf(filepath):
 
         # Footer
         page_num = canvas.getPageNumber()
-        footer_text = Paragraph("%s" % page_num, styleN)
+        footer_text = Paragraph("%s" % page_num, styleFooter)
         w, h = footer_text.wrap(doc.width, doc.bottomMargin)
         footer_text.drawOn(canvas, doc.leftMargin, h)
 
