@@ -37,19 +37,24 @@ def generate_pdf(filepath):
         # Header
         header_text = Paragraph("FastenPdf.  ", styleHeaderFooter)
         w, h = header_text.wrap(doc.width, doc.topMargin)
-        header_text.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
+        # NOTE: Original recommended: header_text.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
+        offset_header = 0.5 * cm
+        header_text.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin + offset_header)
 
         # Footer
         page_num = canvas.getPageNumber()
         footer_text = Paragraph("%s" % page_num, styleHeaderFooter)
         w, h = footer_text.wrap(doc.width, doc.bottomMargin)
-        footer_text.drawOn(canvas, doc.leftMargin, h)
+        offset_footer = 1 * cm
+        footer_text.drawOn(canvas, doc.leftMargin, offset_footer)
 
         canvas.restoreState()
 
-
-    doc = BaseDocTemplate(filepath, pagesize=A4)
-    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id='normal')
+    # Doc initialization
+    doc = BaseDocTemplate(filepath, pagesize=A4, leftMargin=2*cm, rightMargin=2*cm, topMargin=2*cm, bottomMargin=2*cm)
+    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
+                  leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0,
+                  id='normal')
     template = PageTemplate(id='test', frames=frame, onPage=partial(header_footer))
     doc.addPageTemplates([template])
 
