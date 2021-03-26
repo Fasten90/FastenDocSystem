@@ -19,7 +19,7 @@ def make_directory(directory):
         os.makedirs(directory)
 
 
-def generate_pdf(file_path):
+def generate_pdf(file_path, content):
 
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
@@ -55,13 +55,11 @@ def generate_pdf(file_path):
     template = PageTemplate(id='test', frames=frame, onPage=partial(header_footer))
     doc.addPageTemplates([template])
 
-    text = []
-    for i in range(111):
-        text.append(Paragraph("This is line %d." % i, styleN))
+    # Content
 
     # Finish pdf
     try:
-        doc.build(text)
+        doc.build(content)
     except PermissionError as ex:
         debug_log("Error: {}".format(ex))
         debug_log("Please close the pdf document!")
@@ -98,8 +96,18 @@ def generate_pdf(file_path):
     """
 
 
-def open_pdf(filepath):
-    os.system("start " + filepath)
+def generate_content():
+    styles = getSampleStyleSheet()
+    styleN = styles['Normal']
+
+    text = []
+    for i in range(111):
+        text.append(Paragraph("This is line %d." % i, styleN))
+    return text
+
+
+def open_pdf(file_path):
+    os.system("start " + file_path)
 
 
 def main():
@@ -111,7 +119,8 @@ def main():
     filename = "FastenDoc.pdf"
     file_path = os.path.join(directory, filename)
 
-    generate_pdf(file_path)
+    content = generate_content()
+    generate_pdf(file_path, content=content)
 
     open_pdf(file_path)
 
