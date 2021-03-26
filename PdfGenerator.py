@@ -12,8 +12,8 @@ from functools import partial
 ###############################################################################
 
 
-def debug_log(str):
-    print(str)
+def debug_log(msg):
+    print(msg)
 
 
 def make_directory(directory):
@@ -35,7 +35,7 @@ def generate_pdf(filepath):
         canvas.saveState()
 
         # Header
-        header_text = Paragraph("FastenPdf.  ", styleHeaderFooter)
+        header_text = Paragraph("FastenPdf", styleHeaderFooter)
         w, h = header_text.wrap(doc.width, doc.topMargin)
         # NOTE: Original recommended: header_text.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
         offset_header = 0.5 * cm
@@ -112,11 +112,11 @@ def main():
     make_directory(directory)
 
     filename = "test.pdf"
-    filepath = os.path.join(directory, filename)
+    file_path = os.path.join(directory, filename)
 
-    generate_pdf(filepath)
+    generate_pdf(file_path)
 
-    open_pdf(filepath)
+    open_pdf(file_path)
 
     debug_log("Pdf generation finished...")
 
