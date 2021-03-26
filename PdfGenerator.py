@@ -9,9 +9,6 @@ from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph
 from functools import partial
 
 
-###############################################################################
-
-
 def debug_log(msg):
     print(msg)
 
@@ -22,7 +19,7 @@ def make_directory(directory):
         os.makedirs(directory)
 
 
-def generate_pdf(filepath):
+def generate_pdf(file_path):
 
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
@@ -51,7 +48,7 @@ def generate_pdf(filepath):
         canvas.restoreState()
 
     # Doc initialization
-    doc = BaseDocTemplate(filepath, pagesize=A4, leftMargin=2*cm, rightMargin=2*cm, topMargin=2*cm, bottomMargin=2*cm)
+    doc = BaseDocTemplate(file_path, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=2 * cm, bottomMargin=2 * cm)
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
                   leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0,
                   id='normal')
@@ -111,7 +108,7 @@ def main():
     directory = "out"
     make_directory(directory)
 
-    filename = "test.pdf"
+    filename = "FastenDoc.pdf"
     file_path = os.path.join(directory, filename)
 
     generate_pdf(file_path)
