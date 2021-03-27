@@ -112,8 +112,9 @@ def generate_content():
             ['20', '21', '22', '23', '24'],
             ['30', '31', '32', '33', '34']]
     t = Table(data)
-    t.setStyle(TableStyle([('BACKGROUND', (1, 1), (-2, -2), colors.green),
-                           ('TEXTCOLOR', (0, 0), (1, -1), colors.red)]))
+    # Set header style of talbe
+    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
+                           ('TEXTCOLOR', (0, 0), (5, 0), colors.white)]))
     content.append(t)
 
     return content
