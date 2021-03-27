@@ -1,11 +1,12 @@
 import os
 import time
 
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
-from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph
+from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph,Table, TableStyle
 from functools import partial
 
 
@@ -97,13 +98,25 @@ def generate_pdf(file_path, content):
 
 
 def generate_content():
+    content = []
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
 
-    text = []
+    # Paragraph
     for i in range(111):
-        text.append(Paragraph("This is line %d." % i, styleN))
-    return text
+        content.append(Paragraph("This is line %d." % i, styleN))
+
+    # Table
+    data = [['00', '01', '02', '03', '04'],
+            ['10', '11', '12', '13', '14'],
+            ['20', '21', '22', '23', '24'],
+            ['30', '31', '32', '33', '34']]
+    t = Table(data)
+    t.setStyle(TableStyle([('BACKGROUND', (1, 1), (-2, -2), colors.green),
+                           ('TEXTCOLOR', (0, 0), (1, -1), colors.red)]))
+    content.append(t)
+
+    return content
 
 
 def open_pdf(file_path):
