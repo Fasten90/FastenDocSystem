@@ -1,5 +1,6 @@
 import os
 import time
+import csv
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -101,6 +102,30 @@ def generate_content():
     content = []
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
+    # Check input directory
+    import glob
+    file_list = glob.glob("input/*.csv")
+    print("Found files: {}".format(file_list))
+    file_list.sort()
+    for file in file_list:
+        table_data = []
+        with open(file) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                table_data.append(row)
+        content.append(Paragraph("Compiler warning file: {}".format(file), styleN))
+        t = Table(table_data)
+        # Set header style of table
+        t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
+                               ('TEXTCOLOR', (0, 0), (5, 0), colors.white)]))
+        content.append(t)
+    return content
+
+
+def generate_test_content():
+    content = []
+    styles = getSampleStyleSheet()
+    styleN = styles['Normal']
 
     # Paragraph
     for i in range(111):
@@ -112,7 +137,7 @@ def generate_content():
             ['20', '21', '22', '23', '24'],
             ['30', '31', '32', '33', '34']]
     t = Table(data)
-    # Set header style of talbe
+    # Set header style of table
     t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
                            ('TEXTCOLOR', (0, 0), (5, 0), colors.white)]))
     content.append(t)
