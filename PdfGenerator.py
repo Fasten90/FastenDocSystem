@@ -1,6 +1,8 @@
 import os
 import time
 import csv
+import glob
+import textwrap
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -50,14 +52,17 @@ def generate_pdf(file_path, content):
         canvas.restoreState()
 
     # Doc initialization
-    doc = BaseDocTemplate(file_path, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=2 * cm, bottomMargin=2 * cm)
+    doc = BaseDocTemplate(file_path, pagesize=A4,
+                          leftMargin=2 * cm, rightMargin=2 * cm, topMargin=2 * cm, bottomMargin=2 * cm)
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
                   leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0,
                   id='normal')
     template = PageTemplate(id='test', frames=frame, onPage=partial(header_footer))
     doc.addPageTemplates([template])
+    doc.title = 'FastenDoc'
 
     # Content
+    # Provided in input argument
 
     # Finish pdf
     try:
@@ -74,7 +79,7 @@ def generate_pdf(file_path, content):
             time.sleep(1)
 
         # Retry generation
-        doc.build(text)
+        doc.build(content)
 
 
     """
@@ -103,7 +108,6 @@ def generate_content():
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
     # Check input directory
-    import glob
     file_list = glob.glob("input/*.csv")
     print("Found files: {}".format(file_list))
     file_list.sort()
@@ -112,7 +116,13 @@ def generate_content():
         with open(file) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
-                table_data.append(row)
+                # Check content
+                new_row = []
+                for cell in row:
+                    if len(cell) > 60:
+                        cell = "\n".join(textwrap.wrap(cell, 60))
+                    new_row.append(cell)
+                table_data.append(new_row)
         content.append(Paragraph("Compiler warning file: {}".format(file), styleN))
         t = Table(table_data)
         # Set header style of table
