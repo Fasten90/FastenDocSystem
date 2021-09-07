@@ -1,11 +1,15 @@
 import os
 import time
+import csv
+import glob
+import textwrap
 
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
-from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph
+from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph,Table, TableStyle
 from functools import partial
 
 
@@ -48,14 +52,17 @@ def generate_pdf(file_path, content):
         canvas.restoreState()
 
     # Doc initialization
-    doc = BaseDocTemplate(file_path, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=2 * cm, bottomMargin=2 * cm)
+    doc = BaseDocTemplate(file_path, pagesize=A4,
+                          leftMargin=2 * cm, rightMargin=2 * cm, topMargin=2 * cm, bottomMargin=2 * cm)
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
                   leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0,
                   id='normal')
     template = PageTemplate(id='test', frames=frame, onPage=partial(header_footer))
     doc.addPageTemplates([template])
+    doc.title = 'FastenDoc'
 
     # Content
+    # Provided in input argument
 
     # Finish pdf
     try:
@@ -72,7 +79,7 @@ def generate_pdf(file_path, content):
             time.sleep(1)
 
         # Retry generation
-        doc.build(text)
+        doc.build(content)
 
 
     """
@@ -97,13 +104,55 @@ def generate_pdf(file_path, content):
 
 
 def generate_content():
+    content = []
+    styles = getSampleStyleSheet()
+    styleN = styles['Normal']
+    # Check input directory
+    file_list = glob.glob("input/*.csv")
+    print("Found files: {}".format(file_list))
+    file_list.sort()
+    for file in file_list:
+        table_data = []
+        with open(file) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                # Check content
+                new_row = []
+                for cell in row:
+                    if len(cell) > 60:
+                        cell = "\n".join(textwrap.wrap(cell, 60))
+                    new_row.append(cell)
+                table_data.append(new_row)
+        content.append(Paragraph("Compiler warning file: {}".format(file), styleN))
+        t = Table(table_data)
+        # Set header style of table
+        t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
+                               ('TEXTCOLOR', (0, 0), (5, 0), colors.white)]))
+        content.append(t)
+    return content
+
+
+def generate_test_content():
+    content = []
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
 
-    text = []
+    # Paragraph
     for i in range(111):
-        text.append(Paragraph("This is line %d." % i, styleN))
-    return text
+        content.append(Paragraph("This is line %d." % i, styleN))
+
+    # Table
+    data = [['00', '01', '02', '03', '04'],
+            ['10', '11', '12', '13', '14'],
+            ['20', '21', '22', '23', '24'],
+            ['30', '31', '32', '33', '34']]
+    t = Table(data)
+    # Set header style of table
+    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
+                           ('TEXTCOLOR', (0, 0), (5, 0), colors.white)]))
+    content.append(t)
+
+    return content
 
 
 def open_pdf(file_path):
