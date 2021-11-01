@@ -157,8 +157,6 @@ def main():
 
     args = parser.parse_args()
 
-
-
     args.input_path += '/*.csv'
 
     file_path_splitted = args.export_pdf_file_path.split('/')
@@ -169,6 +167,8 @@ def main():
         directory = os.path.join(*directory_list)
         make_directory(directory)
     file_path = os.path.join(directory, file_name)
+
+    print('Will be exported to: {}'.format(file_path))
 
     debug_log("Pdf generation started...")
 
