@@ -3,6 +3,7 @@ import time
 import csv
 import glob
 import textwrap
+import argparse
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -103,13 +104,13 @@ def generate_pdf(file_path, content):
     """
 
 
-def generate_content():
+def generate_content(input_glob='input/*.csv'):
     content = []
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
     # Check input directory
-    file_list = glob.glob("input/*.csv")
-    print("Found files: {}".format(file_list))
+    file_list = glob.glob(input_glob)
+    print('Found files: {}'.format(file_list))
     file_list.sort()
     for file in file_list:
         table_data = []
@@ -132,46 +133,50 @@ def generate_content():
     return content
 
 
-def generate_test_content():
-    content = []
-    styles = getSampleStyleSheet()
-    styleN = styles['Normal']
-
-    # Paragraph
-    for i in range(111):
-        content.append(Paragraph("This is line %d." % i, styleN))
-
-    # Table
-    data = [['00', '01', '02', '03', '04'],
-            ['10', '11', '12', '13', '14'],
-            ['20', '21', '22', '23', '24'],
-            ['30', '31', '32', '33', '34']]
-    t = Table(data)
-    # Set header style of table
-    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
-                           ('TEXTCOLOR', (0, 0), (5, 0), colors.white)]))
-    content.append(t)
-
-    return content
-
-
 def open_pdf(file_path):
     os.system("start " + file_path)
 
 
 def main():
+
+    parser = argparse.ArgumentParser(description='FastenDocSystem - Pdf generator')
+
+    cwd = os.getcwd()
+
+    parser.add_argument('--input-path', required=False, type=str,
+                        default='input',
+                        help='input directory path. Where the CSV files are existing')
+
+    parser.add_argument('--open-after-generated', required=False, action='store_true',
+                        default=False,
+                        help='Opening pdf after the generation')
+
+    parser.add_argument('--export-pdf-file-path', required=False, type=str,
+                        default='out/FastenDoc.pdf',
+                        help='Export PDF file path where it shall be generated')
+
+    args = parser.parse_args()
+
+    args.input_path += '/*.csv'
+
+    file_path_splitted = args.export_pdf_file_path.split('/')
+    file_name = file_path_splitted[-1]
+    if len(file_path_splitted) > 1:
+        directory_list = file_path_splitted[:-1]
+        # https://stackoverflow.com/questions/14826888/python-os-path-join-on-a-list
+        directory = os.path.join(*directory_list)
+        make_directory(directory)
+    file_path = os.path.join(directory, file_name)
+
+    print('Will be exported to: {}'.format(file_path))
+
     debug_log("Pdf generation started...")
 
-    directory = "out"
-    make_directory(directory)
-
-    filename = "FastenDoc.pdf"
-    file_path = os.path.join(directory, filename)
-
-    content = generate_content()
+    content = generate_content(args.input_path)
     generate_pdf(file_path, content=content)
 
-    open_pdf(file_path)
+    if args.open_after_generated:
+        open_pdf(file_path)
 
     debug_log("Pdf generation finished...")
 
