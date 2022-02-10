@@ -10,9 +10,11 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- displayName: 'SystemTest - Generate document'
 - script: |
     echo FastenDocSystem pipeline
     python -m pip install -r requirements.txt
     python PdfGenerator.py --input-path=input --open-after-generated --export-pdf-file-path=out/FastenDoc.pdf
-  displayName: 'SystemTest - Generate document'
+- publish: $(System.DefaultWorkingDirectory)/out/FastenDoc.pdf
+  artifact: FastenDocPdf
 
