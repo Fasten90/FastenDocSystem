@@ -14,7 +14,17 @@ venv\Scripts\python.exe -m pip install -r requirements.txt
 
 ## Usage
 
-Under development.
+Arguments of PdfGenerator.py:
+* `--input-path`
+  * input directory path. Where the CSV files are existing
+* `--open-after-generated`
+  * Opening pdf after the generation
+* `--export-pdf-file-path`
+  * Export PDF file path where it shall be generated
+
+e.g. 
+`venv\Scripts\python.exe PdfGenerator.py --input-path=input --open-after-generated --export-pdf-file-path=out/FastenDoc.pdf`
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

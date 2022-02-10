@@ -4,6 +4,7 @@ import csv
 import glob
 import textwrap
 import argparse
+import subprocess
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -124,7 +125,7 @@ def generate_content(input_glob='input/*.csv'):
                         cell = "\n".join(textwrap.wrap(cell, 60))
                     new_row.append(cell)
                 table_data.append(new_row)
-        content.append(Paragraph("Compiler warning file: {}".format(file), styleN))
+        content.append(Paragraph('File: {}'.format(file), styleN))
         t = Table(table_data)
         # Set header style of table
         t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
@@ -134,7 +135,7 @@ def generate_content(input_glob='input/*.csv'):
 
 
 def open_pdf(file_path):
-    os.system("start " + file_path)
+    subprocess.call(['start', 'file_path'])
 
 
 def main():
