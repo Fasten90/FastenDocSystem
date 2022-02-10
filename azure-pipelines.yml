@@ -1,20 +1,22 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+  # Starter pipeline
+  # Start with a minimal pipeline that you can customize to build and deploy your code.
+  # Add steps that build, run tests, deploy, and more:
+  # https://aka.ms/yaml
 
-trigger:
-- master
 
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-- displayName: 'SystemTest - Generate document'
-- script: |
-    echo FastenDocSystem pipeline
-    python -m pip install -r requirements.txt
-    python PdfGenerator.py --input-path=input --open-after-generated --export-pdf-file-path=out/FastenDoc.pdf
-- publish: $(System.DefaultWorkingDirectory)/out/FastenDoc.pdf
-  artifact: FastenDocPdf
+stages:
+- stage: Test
+  jobs:
+  # Fasten CWC - Compiler Warnings Collector
+  - job: FastenDocSystem_SystemTest
+    pool:
+      vmImage: 'ubuntu-latest'
+    displayName: 'SystemTest - Generate document'
+    steps:
+    - script: |
+        echo FastenDocSystem pipeline
+        python -m pip install -r requirements.txt
+        python PdfGenerator.py --input-path=input --open-after-generated --export-pdf-file-path=out/FastenDoc.pdf
+    - publish: $(System.DefaultWorkingDirectory)/out/FastenDoc.pdf
+      artifact: FastenDocPdf
 
