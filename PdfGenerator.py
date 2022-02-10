@@ -134,7 +134,7 @@ def generate_content(input_glob='input/*.csv'):
 
 
 def open_pdf(file_path):
-    os.system("start " + file_path)
+    os.system(['start', 'file_path'])
 
 
 def main():
