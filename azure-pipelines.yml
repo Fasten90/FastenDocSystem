@@ -16,7 +16,8 @@ stages:
     - script: |
         echo FastenDocSystem pipeline
         python -m pip install -r requirements.txt
-        python PdfGenerator.py --input-path=input --open-after-generated --export-pdf-file-path=out/FastenDoc.pdf
+        python PdfGenerator.py --input-path=input --export-pdf-file-path=out/FastenDoc.pdf
+        # '--open-after-generated' cannot use at pipeline
     - publish: $(System.DefaultWorkingDirectory)/out/FastenDoc.pdf
       artifact: FastenDocPdf
 
