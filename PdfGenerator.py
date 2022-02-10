@@ -4,6 +4,7 @@ import csv
 import glob
 import textwrap
 import argparse
+import subprocess
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -134,7 +135,7 @@ def generate_content(input_glob='input/*.csv'):
 
 
 def open_pdf(file_path):
-    os.system(['start', 'file_path'])
+    subprocess.call(['start', 'file_path'])
 
 
 def main():
