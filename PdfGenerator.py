@@ -84,27 +84,6 @@ def generate_pdf(file_path, content):
         doc.build(content)
 
 
-    """
-    canvas_obj = canvas.Canvas(filepath, pagesize=A4)
-
-    # Create textobject
-    textobject = canvas_obj.beginText()
-
-    # Set text location (x, y)
-    textobject.setTextOrigin(10, 730)
-
-    spacing = 0
-    for indent in range(8):
-        textobject.setCharSpace(spacing)
-        line = '{} - ReportLab spacing demo'.format(spacing)
-        textobject.textLine(line)
-        spacing += 0.7
-
-    canvas_obj.drawText(textobject)
-    canvas_obj.save()
-    """
-
-
 def generate_content(input_glob='input/*.csv'):
     content = []
     styles = getSampleStyleSheet()
@@ -135,7 +114,7 @@ def generate_content(input_glob='input/*.csv'):
 
 
 def open_pdf(file_path):
-    subprocess.call(['start', 'file_path'])
+    subprocess.call(['start', file_path])
 
 
 def main():
@@ -143,6 +122,7 @@ def main():
     parser = argparse.ArgumentParser(description='FastenDocSystem - Pdf generator')
 
     cwd = os.getcwd()
+    print('cwd: {}'.format(cwd))
 
     parser.add_argument('--input-path', required=False, type=str,
                         default='input',
