@@ -3,9 +3,9 @@ import unittest
 import PdfGenerator
 
 
-def TestPdfGenerator(unittest.TestCase):
+class TestPdfGenerator(unittest.TestCase):
 
-    def test_generate_test():
+    def test_generate_test(self):
         PdfGenerator.generate_pdf(file_path='testfile.pdf', content='')
         # Not return value
 

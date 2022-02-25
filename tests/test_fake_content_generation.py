@@ -24,9 +24,9 @@ def generate_test_content():
     return content
 
 
-def TestFakeGeneration(unittest.TestCase):
+class TestFakeGeneration(unittest.TestCase):
 
-    def test_generate_test():
+    def test_generate_test(self):
         result = generate_test_content()
         assert result
 
