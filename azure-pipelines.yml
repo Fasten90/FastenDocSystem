@@ -17,7 +17,8 @@ stages:
         echo FastenDocSystem pipeline
         python -m pip install -r requirements.txt
         python -m unittest
-    - publish: $(System.DefaultWorkingDirectory)/out/FastenDoc.pdf
+      # Publish file depends on test_pdf_generation output
+    - publish: $(System.DefaultWorkingDirectory)/testfile.pdf
       artifact: FastenDocPdf
 
 
