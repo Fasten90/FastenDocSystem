@@ -3,32 +3,11 @@ import unittest
 import PdfGenerator
 
 
-def generate_test_content():
-    content = []
-    styles = getSampleStyleSheet()
-    styleN = styles['Normal']
+class TestPdfGenerator(unittest.TestCase):
 
-    # Paragraph
-    for i in range(111):
-        content.append(Paragraph("This is line %d." % i, styleN))
-
-    # Table
-    data = [['00', '01', '02', '03', '04'],
-            ['10', '11', '12', '13', '14'],
-            ['20', '21', '22', '23', '24'],
-            ['30', '31', '32', '33', '34']]
-    t = Table(data)
-    # Set header style of table
-    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.grey),
-                           ('TEXTCOLOR', (0, 0), (5, 0), colors.white)]))
-    content.append(t)
-
-    return content
-
-
-class MyTestCase(unittest.TestCase):
-    def test_something(self):
-        self.assertEqual(True, False)
+    def test_generate_test(self):
+        PdfGenerator.generate_pdf(file_path='testfile.pdf', content='')
+        # Not return value
 
 
 if __name__ == '__main__':
