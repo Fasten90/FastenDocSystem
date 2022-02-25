@@ -7,7 +7,32 @@
 stages:
 - stage: Test
   jobs:
-  # Fasten CWC - Compiler Warnings Collector
+
+  - job: FastenDocSystem_UnitTest
+    pool:
+      vmImage: 'ubuntu-latest'
+    displayName: 'UnitTest'
+    steps:
+    - script: |
+        echo FastenDocSystem pipeline
+        python -m pip install -r requirements.txt
+        python -m unittest
+    - publish: $(System.DefaultWorkingDirectory)/out/FastenDoc.pdf
+      artifact: FastenDocPdf
+
+
+  - job: FastenDocSystem_Pylint
+    pool:
+      vmImage: 'ubuntu-latest'
+    displayName: 'Pylint'
+    steps:
+    - script: |
+        echo FastenDocSystem pipeline
+        python -m pip install -r requirements.txt
+        python -m pip install pylint
+        pylint --disable=R,C PdfGenerator.py 
+
+
   - job: FastenDocSystem_SystemTest
     pool:
       vmImage: 'ubuntu-latest'
