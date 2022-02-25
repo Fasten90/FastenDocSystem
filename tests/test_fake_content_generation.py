@@ -1,5 +1,14 @@
 import unittest
 
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_LEFT, TA_CENTER
+from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph,Table, TableStyle
+from functools import partial
+
+
 
 def generate_test_content():
     content = []
