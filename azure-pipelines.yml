@@ -19,7 +19,7 @@ stages:
         python -m unittest
       # Publish file depends on test_pdf_generation output
     - publish: $(System.DefaultWorkingDirectory)/testfile.pdf
-      artifact: FastenDocPdf
+      artifact: TestPdf
 
 
   - job: FastenDocSystem_Pylint
