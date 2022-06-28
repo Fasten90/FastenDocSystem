@@ -143,11 +143,15 @@ def main():
     file_path_splitted = args.export_pdf_file_path.split('/')
     file_name = file_path_splitted[-1]
     if len(file_path_splitted) > 1:
+        # Has directory
         directory_list = file_path_splitted[:-1]
         # https://stackoverflow.com/questions/14826888/python-os-path-join-on-a-list
         directory = os.path.join(*directory_list)
         make_directory(directory)
-    file_path = os.path.join(directory, file_name)
+        file_path = os.path.join(directory, file_name)
+    else:
+        # Only file
+        file_path = args.export_pdf_file_path
 
     print('Will be exported to: {}'.format(file_path))
 
